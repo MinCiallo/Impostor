@@ -7,7 +7,7 @@ namespace Impostor.Server.Http;
 
 /// <summary>
 /// Generate a diagnostic page to show that the Impostor HTTP server is working.
-/// If a welcome.html file exists in the Http folder, it will be served as the welcome page.
+/// If a index.html file exists in the Http folder, it will be served as the welcome page.
 /// </summary>
 [Route("/")]
 public sealed class HelloController : ControllerBase
@@ -31,7 +31,7 @@ public sealed class HelloController : ControllerBase
             _logger.LogInformation("Impostor's Http server is reachable (this message is only printed once per start)");
         }
 
-        var welcomePath = Path.Combine(_env.ContentRootPath, "Http", "welcome.html");
+        var welcomePath = Path.Combine(_env.ContentRootPath, "Http", "index.html");
         if (System.IO.File.Exists(welcomePath))
         {
             var html = System.IO.File.ReadAllText(welcomePath);
