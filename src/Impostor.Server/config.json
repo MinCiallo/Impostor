@@ -8,7 +8,8 @@
   "HttpServer": {
     "Enabled": true,
     "ListenIp": "0.0.0.0",
-    "ListenPort": 22023
+    "ListenPort": 22023,
+    "WelcomePagePath": "hello.html"
   },
   "AntiCheat": {
     "Enabled": true,
