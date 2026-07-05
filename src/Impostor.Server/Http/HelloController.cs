@@ -1,25 +1,25 @@
 using System.IO;
-using Impostor.Api.Config;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Impostor.Server.Http;
 
 /// <summary>
 /// Generate a diagnostic page to show that the Impostor HTTP server is working.
+/// If a welcome.html file exists in the Http folder, it will be served as the welcome page.
 /// </summary>
 [Route("/")]
 public sealed class HelloController : ControllerBase
 {
     private static bool _shownHello = false;
     private readonly ILogger<HelloController> _logger;
-    private readonly IOptions<HttpServerConfig> _httpConfig;
+    private readonly IWebHostEnvironment _env;
 
-    public HelloController(ILogger<HelloController> logger, IOptions<HttpServerConfig> httpConfig)
+    public HelloController(ILogger<HelloController> logger, IWebHostEnvironment env)
     {
         _logger = logger;
-        _httpConfig = httpConfig;
+        _env = env;
     }
 
     [HttpGet]
@@ -31,10 +31,10 @@ public sealed class HelloController : ControllerBase
             _logger.LogInformation("Impostor's Http server is reachable (this message is only printed once per start)");
         }
 
-        var welcomePagePath = _httpConfig.Value.WelcomePagePath;
-        if (!string.IsNullOrEmpty(welcomePagePath) && System.IO.File.Exists(welcomePagePath))
+        var welcomePath = Path.Combine(_env.ContentRootPath, "Http", "welcome.html");
+        if (System.IO.File.Exists(welcomePath))
         {
-            var html = System.IO.File.ReadAllText(welcomePagePath);
+            var html = System.IO.File.ReadAllText(welcomePath);
             return Content(html, "text/html");
         }
 
